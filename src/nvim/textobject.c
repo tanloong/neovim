@@ -78,7 +78,7 @@ int findsent(Direction dir, int count)
     // go back to the previous non-white non-punctuation character
     bool found_dot = false;
     while (c = gchar_pos(&pos), ascii_iswhite(c)
-           || vim_strchr(".!?)]\"'", c) != NULL) {
+           || vim_strchr(".!?)]\"'。！？）】”’", c) != NULL) {
       pos_T tpos = pos;
       if (decl(&tpos) == -1 || (LINEEMPTY(tpos.lnum) && dir == FORWARD)) {
         break;
@@ -86,11 +86,11 @@ int findsent(Direction dir, int count)
       if (found_dot) {
         break;
       }
-      if (vim_strchr(".!?", c) != NULL) {
+      if (vim_strchr(".!?。！？", c) != NULL) {
         found_dot = true;
       }
-      if (vim_strchr(")]\"'", c) != NULL
-          && vim_strchr(".!?)]\"'", gchar_pos(&tpos)) == NULL) {
+      if (vim_strchr(")]\"'）】”’", c) != NULL
+          && vim_strchr(".!?)]\"'。！？）】”’", gchar_pos(&tpos)) == NULL) {
         break;
       }
       decl(&pos);
@@ -108,13 +108,14 @@ int findsent(Direction dir, int count)
         }
         break;
       }
-      if (c == '.' || c == '!' || c == '?') {
+      if (vim_strchr(".!?。！？", c)) {
+      /*if (c == '.' || c == '!' || c == '?') {*/
         pos_T tpos = pos;
         do {
           if ((c = inc(&tpos)) == -1) {
             break;
           }
-        } while (vim_strchr(")]\"'", c = gchar_pos(&tpos))
+        } while (vim_strchr(")]\"'）】”’", c = gchar_pos(&tpos))
                  != NULL);
         if (c == -1 || (!cpo_J && (c == ' ' || c == '\t')) || c == NUL
             || (cpo_J && (c == ' ' && inc(&tpos) >= 0
